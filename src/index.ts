@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-import fs from 'fs'
 import { Command } from 'commander'
+import { resize } from './resize'
 
 const program = new Command()
 
-const dir_files = fs.readdir(__dirname, (err, files) => {
-    if(err) throw new Error (err.message)
-    console.log(files)
-    return files
-})
+program
+    .argument("<pathToFolder>", "path to folder with images")
+    .action((pathToFolder: string) => {
+        resize(pathToFolder)
+    })
+    .description('resizes all images in folder')
 
-console.log(__dirname ,dir_files)
+program.parse(process.argv)
