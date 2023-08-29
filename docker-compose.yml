@@ -1,0 +1,10 @@
+
+services:
+  resize-cli:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: npm link
+
+  ffmpeg:
+    image: jrottenberg/ffmpeg:3-alpine

@@ -1,24 +1,22 @@
 import fs from 'fs'
 import { exec } from 'child_process'
 
-// ffmpeg -i imageName.jpg -vf scale=20:-1 imageName-small.jpg
-
-function ffmpeg(fileName: string, scale: number = 20): void {
+function ffmpeg(path: string, fileName: string, scale: number = 20): void {
 
     const splitIdx = fileName.indexOf('.')
     const outFile = fileName.slice(0, splitIdx)
 
-    exec(`ffmpeg -i ${fileName} -vf scale=${scale}:-1 small-${outFile}.jpg`, 
+    exec(`ffmpeg -i ${path}/${fileName} -vf scale=${scale}:-1 ${path}/small-${outFile}.jpg 2> /dev/null`, 
     (error, stdout, stderr) => {
         if(error) {
-            console.error(`Error: ${error.message}`)
+            console.error(`Error 1: ${error.message}`)
             return
         }
         if(stderr) {
-            console.error(`Error: ${stderr}`)
+            console.error(`Error 2: ${stderr}`)
             return
         }
-        console.log(`images resized successfully\noutput: ${stdout}`)
+        console.log(`image ${fileName} resized successfully`)
     })
 }
 
@@ -28,7 +26,7 @@ export function resize(folderPath: string) {
 
         filesArr.forEach((file) => {
             try {
-                ffmpeg(file)
+                ffmpeg(folderPath, file)
             } catch(err) {
                 if(err instanceof Error) {
                     throw new Error (err.message)
