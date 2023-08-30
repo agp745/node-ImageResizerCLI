@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "tsc -w",
-    "link-cli": "npm unlink --global && npm link"
+    "link-cli": "npm unlink --global && npm link",
+    "redo": "find test_images -name 'small-*.jpg' -print0 | xargs -0 rm"
   },
   "dependencies": {
     "commander": "^11.0.0"

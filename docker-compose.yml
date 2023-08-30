@@ -4,7 +4,9 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    command: npm link
+    volumes:
+      - ./src:/app
+    command: npm install
 
   ffmpeg:
     image: jrottenberg/ffmpeg:3-alpine

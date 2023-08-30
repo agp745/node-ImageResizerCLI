@@ -16,7 +16,7 @@ function ffmpeg(path: string, fileName: string, scale: number = 20): void {
             console.error(`Error 2: ${stderr}`)
             return
         }
-        console.log(`image ${fileName} resized successfully`)
+        console.log(`\n✨  ${fileName} => small-${outFile}.jpg`)
     })
 }
 
