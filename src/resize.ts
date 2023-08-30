@@ -9,11 +9,11 @@ function ffmpeg(path: string, fileName: string, scale: number = 20): void {
     exec(`ffmpeg -i ${path}/${fileName} -vf scale=${scale}:-1 ${path}/resized-${scale}px-${outFile}.jpg 2> /dev/null`, 
     (error, stdout, stderr) => {
         if(error) {
-            console.error(`Error 1: ${error.message}`)
+            console.error(`❌  unable to convert ${fileName}  ❌\n${error.message}`)
             return
         }
         if(stderr) {
-            console.error(`Error 2: ${stderr}`)
+            console.error(`stderr: ${stderr}`)
             return
         }
         console.log(`\n✨  ${fileName} => resized-${scale}px-${outFile}.jpg`)
