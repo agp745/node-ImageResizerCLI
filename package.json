@@ -15,9 +15,11 @@
   "scripts": {
     "dev": "tsc -w",
     "link-cli": "npm unlink --global && npm link",
-    "redo": "find test_images -name 'resized-*.jpg' -print0 | xargs -0 rm"
+    "redo": "find test_images -name 'resized-*.jpg' -print0 | xargs -0 rm",
+    "docker": "node ./src/dynamicDockerfile.ts"
   },
   "dependencies": {
-    "commander": "^11.0.0"
+    "commander": "^11.0.0",
+    "console-log-colors": "^0.4.0"
   }
 }
