@@ -2,37 +2,24 @@ import fs from 'fs'
 import { exec } from 'child_process'
 import { cyanBright } from 'console-log-colors'
 
-function createDockerfile(path: string) {
+export function createDockerfile(path: string, scale: number = 20) {
 
     const content = `
-    FROM node:18
+    FROM node:18-alpine
 
     WORKDIR /app
 
-    COPY package*.json .
+    COPY package*.json ./
 
-    RUN 
+    RUN npm i && apk update && apk add ffmpeg
 
-    ...
+    COPY ${path} .
+
+    CMD ["resize", ".", "-s", "${scale}"]
     `
 
     fs.writeFile(`${path}/Resized-Dockerfile`, content, (err) => {
-        if(err) console.log(err)
-    })
-}
-
-export function findDockerfile(path: string) {
-
-    // const noDockerfileErr = 'find: Dockerfile: No such file or directory'
-    exec('find Dockerfile',
-    (error, stdout, stderr) => {
-        if(stderr || error) {
-            console.log(cyanBright(`✨ 🐳 Dockerfile created!`))
-            createDockerfile(path)
-        }
-        // if(stderr) {
-        //     console.error('stderr', stderr)
-        // }
-        console.log(stdout)
+        if(err) console.error(err)
+        console.log(cyanBright(`✨ 🐳 Dockerfile created!`))
     })
 }

@@ -1,9 +1,9 @@
 {
-  "name": "node-image-resizer-cli",
+  "name": "resizer-cli",
   "bin": {
     "resize": "./dist/index.js"
   },
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "image resizer cli in node with typescript and ffmpeg",
   "main": "src/index.ts",
   "repository": "git@github.com:agp745/node-ImageResizerCLI.git",
@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "tsc -w",
     "link-cli": "npm unlink --global && npm link",
-    "redo": "find test_images -name 'resized-*.jpg' -print0 | xargs -0 rm",
+    "rm-i": "find test_images -name 'resized-*.jpg' -print0 | xargs -0 rm",
+    "rm-d": "find . -name 'Resized-Dockerfile' | xargs rm",
     "docker": "node ./src/dynamicDockerfile.ts"
   },
   "dependencies": {

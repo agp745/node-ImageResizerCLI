@@ -2,7 +2,7 @@
 
 import { Command } from 'commander'
 import { resize } from './resize'
-import { findDockerfile } from './dynamicDockerfile'
+import { createDockerfile } from './dynamicDockerfile'
 
 const program = new Command()
 
@@ -14,7 +14,7 @@ program
         const options = program.opts()
 
         if(options.docker) {
-            findDockerfile(pathToFolder)
+            createDockerfile(pathToFolder, options.scale)
         } else if(options.scale) {
             resize(pathToFolder, options.scale)
         } else {
