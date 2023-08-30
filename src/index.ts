@@ -11,8 +11,12 @@ program
     .option('-d, --docker', 'use ffmpeg in a docker container')
     .action((pathToFolder: string) => {
         const options = program.opts()
-        if(options.scale) console.log('option!', options.scale)
-        resize(pathToFolder)
+
+        if(options.scale) {
+            resize(pathToFolder, options.scale)
+        } else {
+            resize(pathToFolder)
+        }
     })
     .description('resizes all images in folder')
 
