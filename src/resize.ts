@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { exec } from 'child_process'
+import { red } from 'console-log-colors'
 
 function ffmpeg(path: string, fileName: string, scale: number = 20): void {
 
@@ -9,7 +10,7 @@ function ffmpeg(path: string, fileName: string, scale: number = 20): void {
     exec(`ffmpeg -i ${path}/${fileName} -vf scale=${scale}:-1 ${path}/resized-${scale}px-${outFile}.jpg 2> /dev/null`, 
     (error, stdout, stderr) => {
         if(error) {
-            console.error(`❌  unable to convert ${fileName}  ❌\n${error.message}`)
+            console.error(red.bold('error  '),`unable to convert ${fileName}`)
             return
         }
         if(stderr) {
@@ -37,7 +38,7 @@ export function resize(folderPath: string, scale?: string) {
             if(file.match(regex)) {
                 return
             }
-
+            
             try {
                 if(Number.isNaN(scaleAsNum)) {
                     ffmpeg(folderPath, file)
@@ -50,6 +51,7 @@ export function resize(folderPath: string, scale?: string) {
                 }
                 console.log(String(err))
             }
+        
         })
 
     } catch(err) {
