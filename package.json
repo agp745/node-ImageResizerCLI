@@ -16,7 +16,7 @@
     "dev": "tsc -w",
     "link-cli": "npm unlink --global && npm link",
     "rm-i": "find test_images -name 'resized-*.jpg' -print0 | xargs -0 rm",
-    "rm-d": "find . \\( -name 'Dockerfile.dev' -o -name '.dockerignore' \\) | xargs rm",
+    "rm-d": "find . \\( -name 'Dockerfile.dev' -o -name '.dockerignore' \\) | xargs rm && docker rmi resizecli-image",
     "docker": "node ./src/dynamicDockerfile.ts"
   },
   "dependencies": {

@@ -1,9 +1,8 @@
 import fs from 'fs'
+import process from 'process'
 import { exec, spawn } from 'child_process'
-import { cyanBright, yellow, red, dim, green } from 'console-log-colors'
+import * as color from 'console-log-colors'
 import { getErrorMessage } from './utils/errorMessage'
-import { error } from 'console'
-import { stderr } from 'process'
 
 // docker run -v /path/on/host:/path/in/container my_image
 // figure out way to find package.json
@@ -36,7 +35,7 @@ export function createDockerfile(path: string, scale: number = 20): void {
             console.error(getErrorMessage(err))
         }
 
-        console.log(cyanBright(`✨ 🐳 Dockerfile created!`))
+        console.log(color.cyanBright(`✨ 🐳 Dockerfile created!`))
 
         buildImage(path)
     })
@@ -44,81 +43,31 @@ export function createDockerfile(path: string, scale: number = 20): void {
 
 function buildImage(path: string): void {
     const buildCmd = `docker build -t resizecli-image -f ./Dockerfile.dev .`
-    const runCmd = `docker run -v ${path}:./app/${path} resizecli-image`
+    console.log(color.yellow('building image...'), color.dim(buildCmd))
 
-    console.log(yellow('running...'), dim(buildCmd))
-    spawnImage(path)
-    // exec(buildCmd, (error, stdout, stderr) => {
-    //     if(error) {
-    //         console.log(error.message)
-    //     }
-    //     if(stderr) {
-    //         console.log('stderr', stderr)
-    //     }
-    //     console.log(stdout)
+    const buildArgs = buildCmd.split(' ').splice(1)
+    const build = spawn('docker', buildArgs, {stdio: 'inherit'})
 
-    //     console.log(yellow('running...'), runCmd)
-    //     exec(runCmd, (error, stdout, stderr) => {
-    //         if(error) {
-    //             console.log(error.message)
-    //             return
-    //         }
-    //         if(stderr) {
-    //             console.log('stderr', stderr)
-    //             return
-    //         }
-    //         console.log(stdout)
-    //     }) 
-    // })
-}
-
-function spawnImage(path: string): void {
-    const buildArgs = ['build', '-t', 'resizecli-image', '-f', './Dockerfile.dev', '.']
-    
-    const build = spawn('docker', buildArgs)
-
-    build.stdout.on('readable', () => {
-        let chunk: Buffer | null = build.stdout.read()
-        while(chunk !== null) {
-            console.log(chunk.toString())
+    build.on('close', (code) => {
+        if(code === 0) {
+            console.log('\n')
+            runImage(path)
         }
     })
-
-    build.stdout.on('error', (err) => {
-        console.log(red.bold('error  '), err.message)
-    })
-
-    build.stderr.on('data', () => {
-        console.log(red.bold('stderr'), stderr)
-    })
-
-    // build.stdout.on('close', () => {
-    //     runImage(path)
-    // })
 }
 
 function runImage(path: string) {
-    `docker run -v ${path}:./app/${path} resizecli-image`
-    const runArgs = ['run', '-v', `.:/app`, 'resizecli-image', '--name', 'resize-cli-container' ]
+    const runCmd = `docker run --rm -v ${path}:/app/${path} resizecli-image`
+    console.log(color.yellow('running image...'), color.dim(runCmd))
 
-    const run = spawn('docker', runArgs)
+    const runArgs = runCmd.split(' ').splice(1)
+    const run = spawn('docker', runArgs, {stdio: 'inherit'})
 
-    run.stdout.on('readable', () => {
-        let chunk
-        while((chunk = run.stdout.read()) !== null) {
-            console.log(chunk.toString())
+    run.on('close', (code, signal) => {
+        if(code === 0) {
+            console.log(color.green(`process exited successfully with code: ${code}`))
+        } else {
+            console.log(color.red(`process exited with code: ${code}\nsignal: ${signal}`))
         }
-    })
-
-    run.stdout.on('error', (err) => {
-        console.log(red.bold('error  '), err.message)
-    })
-
-    run.stderr.on('data', () => {
-        console.log(red.bold('stderr'), stderr)
-    })
-
-    run.stdout.on('close', () => {
-        console.log(green.bold('success '), 'images resized')
     })
 }
