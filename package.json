@@ -3,7 +3,7 @@
   "bin": {
     "resize": "./dist/index.js"
   },
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "image resizer cli in node with typescript and ffmpeg",
   "main": "src/index.ts",
   "repository": "git@github.com:agp745/node-ImageResizerCLI.git",

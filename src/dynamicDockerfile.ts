@@ -1,12 +1,7 @@
 import fs from 'fs'
-import process from 'process'
-import { exec, spawn } from 'child_process'
-import * as color from 'console-log-colors'
+import { spawn } from 'child_process'
+import color from 'console-log-colors'
 import { getErrorMessage } from './utils/errorMessage'
-
-// docker run -v /path/on/host:/path/in/container my_image
-// figure out way to find package.json
-// && apk update && apk add ffmpeg
 
 export function createDockerfile(path: string, scale: number = 20): void {
 
@@ -18,6 +13,8 @@ export function createDockerfile(path: string, scale: number = 20): void {
     COPY package*.json ./
 
     RUN npm install
+
+    RUN apt update && apt install -y ffmpeg
 
     COPY . .
 
@@ -57,7 +54,7 @@ function buildImage(path: string): void {
 }
 
 function runImage(path: string) {
-    const runCmd = `docker run --rm -v ${path}:/app/${path} resizecli-image`
+    const runCmd = `docker run --rm -v .:/app resizecli-image`
     console.log(color.yellow('running image...'), color.dim(runCmd))
 
     const runArgs = runCmd.split(' ').splice(1)
