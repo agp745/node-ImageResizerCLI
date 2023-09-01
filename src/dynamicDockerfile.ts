@@ -62,7 +62,7 @@ function runImage(path: string) {
 
     run.on('close', (code, signal) => {
         if(code === 0) {
-            console.log(color.green(`process exited successfully with code: ${code}`))
+            spawn('docker', ['rmi', 'resizecli-image'], {stdio: 'inherit'})
         } else {
             console.log(color.red(`process exited with code: ${code}\nsignal: ${signal}`))
         }

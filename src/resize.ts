@@ -1,16 +1,22 @@
 import fs from 'fs'
 import { exec } from 'child_process'
-import { red, redBG } from 'console-log-colors'
+import color from 'console-log-colors'
 
 function ffmpeg(path: string, fileName: string, scale: number = 20): void {
 
     const splitIdx = fileName.indexOf('.')
     const outFile = fileName.slice(0, splitIdx)
+    const resizedFile = `resized-${scale}px-${outFile}.jpg`
 
-    exec(`ffmpeg -i ${path}/${fileName} -vf scale=${scale}:-1 ${path}/resized-${scale}px-${outFile}.jpg 2> /dev/null`, 
+    if(fs.existsSync(`${path}/${resizedFile}`)) {
+        console.log(color.yellow('skipping...'), color.bgRed(resizedFile), 'already exists')
+        return
+    }
+
+    exec(`ffmpeg -i ${path}/${fileName} -vf scale=${scale}:-1 ${path}/${resizedFile} 2> /dev/null`, 
     (error, stdout, stderr) => {
         if(error) {
-            console.error(red.bold('error  '),'unable to convert', redBG(fileName))
+            console.error(color.red.bold('error  '),'unable to convert', color.redBG(fileName))
             return
         }
         if(stderr) {
