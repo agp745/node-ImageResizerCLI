@@ -23,7 +23,7 @@ function ffmpeg(path: string, fileName: string, scale: number = 20): void {
             console.error(`stderr: ${stderr}`)
             return
         }
-        console.log(`✨  ${fileName} => resized-${scale}px-${outFile}.jpg`)
+        console.log(color.green('✨success  '), fileName, color.greenBright('=>'), color.underline.green(`resized-${scale}px-${outFile}.jpg`))
     })
 }
 
@@ -44,6 +44,7 @@ export function resize(folderPath: string, scale?: string) {
         filesArr.forEach((file) => {
 
             if(file.match(regex)) {
+                console.log(color.yellow('skipping...'), color.bgYellow(file), 'is a resized file')
                 return
             }
             
