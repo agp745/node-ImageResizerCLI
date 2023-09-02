@@ -23,7 +23,7 @@ function ffmpeg(path: string, fileName: string, scale: number = 20): void {
             console.error(`stderr: ${stderr}`)
             return
         }
-        console.log(`\n✨  ${fileName} => resized-${scale}px-${outFile}.jpg`)
+        console.log(`✨  ${fileName} => resized-${scale}px-${outFile}.jpg`)
     })
 }
 
@@ -33,6 +33,8 @@ export function resize(folderPath: string, scale?: string) {
     if(scale) {
         scaleAsNum = parseInt(scale)
     }
+
+    let scaleError = 0
 
     try {
         const filesArr = fs.readdirSync(folderPath)
@@ -47,8 +49,12 @@ export function resize(folderPath: string, scale?: string) {
             
             try {
                 if(Number.isNaN(scaleAsNum)) {
+                    if(scaleError === 0) {
+                        console.log(color.red('error - invalid scale  '), color.dim('using default scale (20 pixels)'))
+                    }
+                    scaleError++
                     ffmpeg(folderPath, file)
-                    console.log('invalid scale... using default scale of 20 pixels')
+                    return
                 }
                 ffmpeg(folderPath, file, scaleAsNum)
             } catch(err) {
